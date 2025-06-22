@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English Idiom Flashcard Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 40px; }
+.hidden { display: none; }
+#result { margin-top: 20px; }
+</style>
+</head>
+<body>
+<h1>영어 이디엄 플래쉬 카드 퀴즈</h1>
+<div id="start">
+<p>난이도를 선택하세요:</p>
+<button onclick="startQuiz('하')">하</button>
+<button onclick="startQuiz('중')">중</button>
+<button onclick="startQuiz('상')">상</button>
+</div>
+<div id="quiz" class="hidden">
+<p id="question"></p>
+<input type="text" id="answer" placeholder="Enter idiom" />
+<button onclick="submitAnswer()">제출</button>
+<div id="feedback"></div>
+</div>
+<div id="result" class="hidden"></div>
+<script>
+const IDIOMS = {
+  '하': [
+    { idiom: 'piece of cake', meaning: 'very easy' },
+    { idiom: 'break a leg', meaning: 'good luck' },
+    { idiom: 'hit the books', meaning: 'study hard' },
+    { idiom: 'hit the sack', meaning: 'go to bed' },
+    { idiom: 'cold feet', meaning: 'nervous' },
+    { idiom: 'cost an arm and a leg', meaning: 'very expensive' },
+    { idiom: 'once in a blue moon', meaning: 'rarely' },
+    { idiom: 'beat around the bush', meaning: 'avoid the main point' },
+    { idiom: 'in hot water', meaning: 'in trouble' },
+    { idiom: 'when pigs fly', meaning: 'never' }
+  ],
+  '중': [
+    { idiom: 'under the weather', meaning: 'feeling ill' },
+    { idiom: 'let the cat out of the bag', meaning: 'reveal a secret' },
+    { idiom: 'call it a day', meaning: 'stop working' },
+    { idiom: 'speak of the devil', meaning: 'the person appeared while being talked about' },
+    { idiom: 'back to square one', meaning: 'start over' },
+    { idiom: 'burn the midnight oil', meaning: 'work late into the night' },
+    { idiom: 'the ball is in your court', meaning: "it's your decision" },
+    { idiom: 'the early bird catches the worm', meaning: 'start early to succeed' },
+    { idiom: 'keep your chin up', meaning: 'stay positive' },
+    { idiom: 'put all eggs in one basket', meaning: 'rely on one thing' }
+  ],
+  '상': [
+    { idiom: 'cut corners', meaning: 'do something cheaply or badly' },
+    { idiom: 'jump on the bandwagon', meaning: 'join a popular trend' },
+    { idiom: 'throw in the towel', meaning: 'give up' },
+    { idiom: 'bite the bullet', meaning: 'face a difficult situation' },
+    { idiom: 'hit the nail on the head', meaning: 'describe exactly what is causing a situation' },
+    { idiom: 'take it with a grain of salt', meaning: "don't take it too seriously" },
+    { idiom: 'burn bridges', meaning: 'destroy relationships' },
+    { idiom: 'get a taste of your own medicine', meaning: 'experience the same unpleasantness you caused' },
+    { idiom: 'miss the boat', meaning: 'miss an opportunity' },
+    { idiom: "steal someone's thunder", meaning: "take credit for someone else's work" }
+  ]
+};
+let items = [];
+let current = 0;
+let correct = 0;
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+function startQuiz(level) {
+  items = shuffle([...IDIOMS[level]]).slice(0, 10);
+  current = 0;
+  correct = 0;
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('result').classList.add('hidden');
+  nextQuestion();
+}
+function nextQuestion() {
+  if (current >= items.length) {
+    showResult();
+    return;
+  }
+  const q = items[current];
+  document.getElementById('question').innerText = `${current + 1}. Which idiom matches the meaning "${q.meaning}"?`;
+  document.getElementById('answer').value = '';
+  document.getElementById('feedback').innerText = '';
+  document.getElementById('answer').focus();
+}
+function submitAnswer() {
+  const answer = document.getElementById('answer').value.trim().toLowerCase();
+  const q = items[current];
+  if (answer === q.idiom) {
+    correct++;
+    document.getElementById('feedback').innerText = '정답입니다!';
+  } else {
+    document.getElementById('feedback').innerText = `오답입니다. 정답: ${q.idiom}`;
+  }
+  current++;
+  setTimeout(nextQuestion, 1000);
+}
+function showResult() {
+  document.getElementById('quiz').classList.add('hidden');
+  const resultDiv = document.getElementById('result');
+  resultDiv.classList.remove('hidden');
+  resultDiv.innerHTML = `<h2>퀴즈 완료!</h2><p>총 점수: ${correct}/10</p><p>정답률: ${correct * 10}%</p>`;
+  document.getElementById('start').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
